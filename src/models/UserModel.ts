@@ -21,6 +21,10 @@ UserModel.init(
         password: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        cpf: {
+            type: DataTypes.STRING,
+            allowNull: false,
         }
     },
     {
