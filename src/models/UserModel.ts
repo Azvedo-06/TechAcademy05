@@ -1,7 +1,25 @@
-import { DataType, DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/database";               
 
-class UserModel extends Model {};
+// Definir os atributos do modelo User
+interface UserAttributes {
+    id: number;
+    name: string;
+    email: string;
+    password: string;
+    cpf: string;
+}
+
+// Tipagem para criação de usuários (id é opcional, pois o Sequelize gera automaticamente)
+interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
+
+class UserModel extends Model<UserAttributes, UserCreationAttributes>{
+    public id!: number;
+    public name!: string;
+    public email!: string;
+    public password!: string;
+    public cpf!: string;
+};
 
 UserModel.init(
     {
