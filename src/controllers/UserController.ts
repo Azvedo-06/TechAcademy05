@@ -1,11 +1,13 @@
-import User from "../models/UserModel";
-import {Request, Response}  from "express";
+import UserModel from "../models/UserModel";
+import {Request, Response, RequestHandler}  from "express";
 import bcrypt from "bcrypt";
+import { promises } from "dns";
 
 
-class UserController {
+class UserController{
+
     // criar usuario
-    static async createUser(req:Request, res:Response) {
+    static async createUser(req: Request, res:Response) {
         try {
             const {name, email, password, cpf} = req.body;
 
@@ -15,7 +17,7 @@ class UserController {
             }
 
             // validar se o email já existe um usuario com o mesmo email 
-            const existingUser = await User.findOne({where: {email}});
+            const existingUser = await UserModel.findOne({where: {email}});
             if (existingUser) {
                 return res.status(400).json({massage: "Email já cadastrado." });
             } 
@@ -23,7 +25,7 @@ class UserController {
             // criptografia de senha 
             const hashedPassword = await bcrypt.hash(password, 10);
 
-            const newUser = await User.create({
+            const newUser = await UserModel.create({
                 name,
                 email,
                 password: hashedPassword,
@@ -40,7 +42,7 @@ class UserController {
     // obter todos os usuários
     static async findAll(req: Request, res: Response) {
         try {
-            const users = await User.findAll();
+            const users = await UserModel.findAll();
             return res.status(200).json(users);
         } catch (error) {
             console.error("Erro ao buscar usuários:", error);
@@ -52,7 +54,7 @@ class UserController {
         try {
             const userId = req.params.id;
             // Procura o usuário pelo ID
-            const user = await User.findByPk(userId);
+            const user = await UserModel.findByPk(userId);
 
             if(!user) {
                 return res.status(404).json({message: "Usuário não encontrado"})
@@ -67,7 +69,7 @@ class UserController {
     static async delete(req: Request, res: Response) {
         try {
             const userId = req.params.id
-            const user = await User.destroy({ where:{id:userId} });
+            const user = await UserModel.destroy({ where:{id:userId} });
 
             if(user === 0) {
                 return res.status(404).json({message: "Usuário não encontrado"});
@@ -85,7 +87,7 @@ class UserController {
             const {name, email, password, cpf} = req.body;
 
             // Procura o usuário pelo ID
-            const user = await User.findByPk(userId);
+            const user = await UserModel.findByPk(userId);
 
             if (!user) {
                 // Se o usuário não for encontrado

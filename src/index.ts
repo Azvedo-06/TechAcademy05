@@ -1,18 +1,20 @@
 import express from 'express';
 import sequelize from './config/database';
-import UserModel from './models/UserModel';
+import UserRoutes from './routes/UserRoutes';
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+app.use('/api', UserRoutes) // As rotas de usuário estarão sob o prefixo /api
+
 
 app.get('/', (req, res) =>{
     res.send('Projeto 05 TechAcademy');
 })
 
-    
-// async = valor de retorno é uma promise
+/*    
+async = valor de retorno é uma promise
 app.get('/users', async (req, res) => {
     try {
         const usersFindAll = await UserModel.findAll();
@@ -22,6 +24,7 @@ app.get('/users', async (req, res) => {
         res.status(500).json({ error: 'Erro interno ao buscar usuários' })
     }
 });
+*/
 
 
 // async database
@@ -32,6 +35,7 @@ sequelize.sync({ alter: true})
     .catch(() => {
         console.log('falha ao tentar sincronizar database');
     });
+
 
 
 // esse sempre por ultimo
